@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"  # Prometheus доступен на порту 9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml  # Подключение конфигурации Prometheus
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"  # Grafana доступна на порту 3000
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin  # Пользователь по умолчанию
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Пароль по умолчанию
+    depends_on:
+      - prometheus  # Grafana запускается после Prometheus
+    volumes:
+      - grafana-data:/var/lib/grafana  # Для хранения данных Grafana
+
+volumes:
+  grafana-data:
